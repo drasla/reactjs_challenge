@@ -1,9 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Loader from "../../Components/Loader";
-import Coin from "../../Components/Coin";
 import styled from "styled-components";
-import {Link, BaseRouter as Router, Route, Switch, useRouteMatch} from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import DetailMarket from "./Market";
 import DetailExchanges from "./Exchanges";
 import DetailRouter from "../../Components/DetailRouter";
@@ -28,7 +27,7 @@ const DetailPresenter = ({ loading, result }) =>
     loading ? (
         <Loader />
     ) : (
-        <ItemContainer>
+        <ItemContainer key={result.index}>
             <Title>
                 {result.name} / {result.symbol}
             </Title>
@@ -48,8 +47,16 @@ const DetailPresenter = ({ loading, result }) =>
             </OptionContainer>
             <DetailRouter />
             <Switch>
-                <Route exact path={`/coins/:coins_id/market`} component={DetailMarket} />
-                <Route exact path={`/coins/:coins_id/exchanges`}  component={DetailExchanges} />
+                <Route
+                    exact
+                    path={`/coins/:coins_id/market`}
+                    component={DetailMarket}
+                />
+                <Route
+                    exact
+                    path={`/coins/:coins_id/exchanges`}
+                    component={DetailExchanges}
+                />
             </Switch>
         </ItemContainer>
     );
