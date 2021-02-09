@@ -63,12 +63,16 @@ const DetailPresenter = ({ loading, result }) =>
 
 DetailPresenter.propTypes = {
     loading: PropTypes.bool.isRequired,
-    coins: PropTypes.arrayOf(
+    result: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,
             name: PropTypes.string.isRequired,
             symbol: PropTypes.string.isRequired,
-            rank: PropTypes.number.isRequired
+            rank: PropTypes.number.isRequired,
+            description: PropTypes.string.isRequired,
+            open_source: PropTypes.bool.isRequired,
+            proof_type: PropTypes.string.isRequired,
+            org_structure: PropTypes.string.isRequired
         }).isRequired
     ).isRequired
 };
