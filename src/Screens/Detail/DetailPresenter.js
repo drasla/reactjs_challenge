@@ -3,8 +3,10 @@ import PropTypes from "prop-types";
 import Loader from "../../Components/Loader";
 import Coin from "../../Components/Coin";
 import styled from "styled-components";
-import { Link, BaseRouter as Router, Route, Switch } from "react-router-dom";
+import {Link, BaseRouter as Router, Route, Switch, useRouteMatch} from "react-router-dom";
 import DetailMarket from "./Market";
+import DetailExchanges from "./Exchanges";
+import DetailRouter from "../../Components/DetailRouter";
 
 const Title = styled.h1``;
 
@@ -16,35 +18,11 @@ const Description = styled.p`
 
 const OptionContainer = styled.div``;
 
-const ButtonContainer = styled.div`
-  width: 300px;
-  margin: 30px 0px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
 const Option = styled.span`
   font-weight: 800;
 `;
 
 const Value = styled.span``;
-
-const Button = styled.div`
-  width: 80px;
-  height: 50px;
-  text-align: center;
-`;
-
-const SLink = styled(Link)`
-  width: 100px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid black;
-  border-radius: 5px;
-`;
 
 const DetailPresenter = ({ loading, result }) =>
     loading ? (
@@ -68,15 +46,11 @@ const DetailPresenter = ({ loading, result }) =>
             <OptionContainer>
                 <Option>Structure:</Option> <Value>{result.org_structure}</Value>
             </OptionContainer>
-            <ButtonContainer>
-                <Button>
-                    <SLink to={`/coins/${result.id}/market`}>Market</SLink>
-                </Button>
-                <Button>
-                    <SLink to={`/coins/${result.id}/exchanges`}>Exchanges</SLink>
-                </Button>
-                <Button></Button>
-            </ButtonContainer>
+            <DetailRouter />
+            <Switch>
+                <Route exact path={`/coins/:coins_id/market`} component={DetailMarket} />
+                <Route exact path={`/coins/:coins_id/exchanges`}  component={DetailExchanges} />
+            </Switch>
         </ItemContainer>
     );
 

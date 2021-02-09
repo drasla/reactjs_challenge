@@ -1,10 +1,6 @@
 import React from "react";
 import DetailExchangesPresenter from "./DetailExchangesPresenter";
-import {
-    getCoinsId,
-    getCoinsIdExchanges,
-    getCoinsIdMarkets
-} from "../../../api";
+import { getCoinsIdExchanges } from "../../../api";
 
 export default class extends React.Component {
     constructor(props) {
@@ -26,7 +22,7 @@ export default class extends React.Component {
         let result = null;
 
         try {
-            ({ data: result } = await getCoinsId(coins_id));
+            ({ data: result } = await getCoinsIdExchanges(coins_id));
         } catch {
             this.setState({ error: "Can't find anything." });
         } finally {
