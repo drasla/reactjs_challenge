@@ -1,2 +1,2 @@
-import DetailExchangesContainer from "./DetailExchangesContainer";
-export default DetailExchangesContainer;
+import DetailExchangesScreen from "./DetailExchangesScreen";
+export default DetailExchangesScreen;

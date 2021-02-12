@@ -12,6 +12,11 @@ const Name = styled.span`
   margin-bottom: 10px;
 `;
 
+const Desc = styled.span`
+  display: block;
+  margin-bottom: 10px;
+`;
+
 const Links = styled.div`
   margin-top: 15px;
 `;
@@ -23,7 +28,7 @@ const Link = styled.a`
 const Exchange = ({ name, description, links }) => (
     <Container>
         <Name>{name}</Name>
-        {description && `${description.substring(0, 80)}...`}
+        <Desc>{description && `${description.substring(0, 80)}...`}</Desc>
         <Links>
             {links &&
             links.website &&

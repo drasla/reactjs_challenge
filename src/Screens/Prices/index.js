@@ -1,2 +1,2 @@
-import PricesContainer from "./PricesContainer";
-export default PricesContainer;
+import {PricesScreen} from "./PricesScreen";
+export default PricesScreen;

@@ -1,2 +1,2 @@
-import CoinsContainer from "./CoinsContainer";
-export default CoinsContainer;
+import CoinsScreen from "./CoinsScreen";
+export default CoinsScreen;

@@ -1,2 +1,2 @@
-import ExchangeContainer from "./ExchangesContainer";
-export default ExchangeContainer;
+import {ExchangesScreen} from "./ExchangesScreen";
+export default ExchangesScreen;

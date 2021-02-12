@@ -1,2 +1,2 @@
-import DetailMarketContainer from "./DetailMarketContainer";
-export default DetailMarketContainer;
+import DetailMarketScreen from "./DetailMarketScreen";
+export default DetailMarketScreen;

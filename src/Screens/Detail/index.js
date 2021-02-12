@@ -1,2 +1,2 @@
-import DetailContainer from "./DetailContainer";
-export default DetailContainer;
+import DetailScreen from "./DetailScreen";
+export default DetailScreen;
