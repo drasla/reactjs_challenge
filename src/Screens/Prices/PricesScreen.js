@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from "react";
 import Loader from "../../Components/Loader";
 import Price from "../../Components/Price";
-import {getPrices} from "../../api";
+import {getCoinsIdExchanges, getPrices} from "../../api";
 
 export const PricesScreen = () => {
     const [prices, setPrices] = useState([]);
     const [page, setPages] = useState(1);
     const [fetching, setFetching] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [fullData, setFullData] = useState([]);
 
     const handleScroll = (event) => {
         const { target: {scrollingElement}} = event;
@@ -22,29 +23,45 @@ export const PricesScreen = () => {
         return items.slice(startIndex, endIndex);
     }
 
-    const pricesData = async () => {
+    const recieveData = async () => {
         try {
             const { data: pricesData } = await getPrices();
-            const returnData = paginate(pricesData, page);
-            setPrices([...prices, ...returnData]);
+            setFullData(pricesData);
             setLoading(false);
         } catch (e) {
             console.log(e);
         }
     }
 
+    const pricesData = () => {
+        try {
+            const returnData = paginate(fullData, page);
+            setPrices([...prices, ...returnData]);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     useEffect(() => {
-        pricesData(page);
+        recieveData();
+    }, []);
+
+    useEffect(() => {
+        if(loading) {
+            return;
+        }
+        pricesData();
+        setPages(page + 1);
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    }, [loading]);
 
     useEffect(() => {
         if (!fetching) {
             return;
         }
-        setPages(page + 1);
         pricesData(page + 1);
+        setPages(page + 1);
         setFetching(false);
     }, [fetching])
 

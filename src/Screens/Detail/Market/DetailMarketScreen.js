@@ -11,6 +11,7 @@ export const DetailMarketScreen = (props) => {
     const [page, setPages] = useState(1);
     const [fetching, setFetching] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [fullData, setFullData] = useState([]);
 
     const handleScroll = (event) => {
         const { target: {scrollingElement}} = event;
@@ -31,29 +32,45 @@ export const DetailMarketScreen = (props) => {
         }
     } = props;
 
-    const coinMarketData = async (page) => {
+    const recieveData = async () => {
         try {
-            const { data: detailMarketData } = await getCoinsIdMarkets(coins_id);
-            const returnData = paginate(detailMarketData, page);
-            setDetailMarket([...detailMarket, ...returnData]);
+            const {data: detailMarketData} = await getCoinsIdMarkets(coins_id);
+            setFullData(detailMarketData);
             setLoading(false);
         } catch (e) {
             console.log(e);
         }
     }
 
+    const coinMarketData = () => {
+        try {
+            const returnData = paginate(fullData, page);
+            setDetailMarket([...detailMarket, ...returnData]);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     useEffect(() => {
-        coinMarketData(page);
+        recieveData();
+    }, []);
+
+    useEffect(() => {
+        if(loading) {
+            return;
+        }
+        coinMarketData();
+        setPages(page + 1);
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    }, [loading]);
 
     useEffect(() => {
         if (!fetching) {
             return;
         }
-        setPages(page + 1);
         coinMarketData(page + 1);
+        setPages(page + 1);
         setFetching(false);
     }, [fetching])
 

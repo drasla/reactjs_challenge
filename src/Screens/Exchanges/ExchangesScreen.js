@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from "react";
 import Loader from "../../Components/Loader";
 import Exchange from "../../Components/Exchange";
-import {getExchanges} from "../../api";
+import {getCoinsIdExchanges, getExchanges} from "../../api";
 
 export const ExchangesScreen = () => {
     const [exchanges, setExchanges] = useState([]);
     const [page, setPages] = useState(1);
     const [fetching, setFetching] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [fullData, setFullData] = useState([]);
 
     const handleScroll = (event) => {
         const { target: {scrollingElement}} = event;
@@ -22,29 +23,46 @@ export const ExchangesScreen = () => {
         return items.slice(startIndex, endIndex);
     }
 
-    const exchangesData = async () => {
+    const recieveData = async () => {
         try {
             const { data: exchangesData } = await getExchanges();
-            const returnData = paginate(exchangesData, page);
-            setExchanges([...exchanges, ...returnData]);
+            setFullData(exchangesData);
             setLoading(false);
         } catch (e) {
             console.log(e);
         }
     }
 
+    const exchangesData = async () => {
+        try {
+            const returnData = paginate(fullData, page);
+            setExchanges([...exchanges, ...returnData]);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     useEffect(() => {
-        exchangesData(page);
+        recieveData();
+    }, []);
+
+
+    useEffect(() => {
+        if(loading) {
+            return;
+        }
+        exchangesData();
+        setPages(page + 1);
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    }, [loading]);
 
     useEffect(() => {
         if (!fetching) {
             return;
         }
-        setPages(page + 1);
         exchangesData(page + 1);
+        setPages(page + 1);
         setFetching(false);
     }, [fetching])
 

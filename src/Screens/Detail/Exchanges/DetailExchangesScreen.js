@@ -11,6 +11,7 @@ export const DetailExchangesScreen = (props) => {
     const [page, setPages] = useState(1);
     const [fetching, setFetching] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [fullData, setFullData] = useState([]);
 
     const handleScroll = (event) => {
         const { target: {scrollingElement}} = event;
@@ -31,30 +32,45 @@ export const DetailExchangesScreen = (props) => {
         }
     } = props;
 
-
-
-    const coinExchangesData = async () => {
+    const recieveData = async () => {
         try {
-            const { data: detailExhcangesData } = await getCoinsIdExchanges(coins_id);
-            const returnData = paginate(detailExhcangesData, page);
-            setDetailExchanges([...detailExchanges, ...returnData]);
+            const {data: detailExchangesData} = await getCoinsIdExchanges(coins_id);
+            setFullData(detailExchangesData);
             setLoading(false);
         } catch (e) {
             console.log(e);
         }
     }
+
+    const coinExchangesData = () => {
+        try {
+            const returnData = paginate(fullData, page);
+            setDetailExchanges([...detailExchanges, ...returnData]);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     useEffect(() => {
-        coinExchangesData(page);
+        recieveData();
+    }, []);
+
+    useEffect(() => {
+        if(loading) {
+            return;
+        }
+        coinExchangesData();
+        setPages(page + 1);
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    }, [loading]);
 
     useEffect(() => {
         if (!fetching) {
             return;
         }
-        setPages(page + 1);
         coinExchangesData(page + 1);
+        setPages(page + 1);
         setFetching(false);
     }, [fetching])
 

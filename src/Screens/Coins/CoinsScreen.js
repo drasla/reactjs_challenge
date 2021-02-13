@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {getCoins} from "../../api";
+import {getCoins, getCoinsIdExchanges} from "../../api";
 import Loader from "../../Components/Loader";
 import Coin from "../../Components/Coin";
 import { Link } from "react-router-dom";
@@ -16,6 +16,7 @@ export const CoinsScreen = () => {
     const [page, setPages] = useState(1);
     const [fetching, setFetching] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [fullData, setFullData] = useState([]);
 
     const handleScroll = (event) => {
         const { target: {scrollingElement}} = event;
@@ -30,29 +31,45 @@ export const CoinsScreen = () => {
         return items.slice(startIndex, endIndex);
     }
 
-    const coinsData = async (page) => {
+    const recieveData = async () => {
         try {
             const { data: coinsData } = await getCoins();
-            const returnData = paginate(coinsData, page);
-            setCoins([...coins, ...returnData]);
+            setFullData(coinsData);
             setLoading(false);
         } catch (e) {
             console.log(e);
         }
     }
 
+    const coinsData = async () => {
+        try {
+            const returnData = paginate(fullData, page);
+            setCoins([...coins, ...returnData]);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     useEffect(() => {
-        coinsData(page);
+        recieveData();
+    }, []);
+
+    useEffect(() => {
+        if(loading) {
+            return;
+        }
+        coinsData();
+        setPages(page+1);
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    }, [loading]);
 
     useEffect(() => {
         if (!fetching) {
             return;
         }
-        setPages(page + 1);
         coinsData(page + 1);
+        setPages(page + 1);
         setFetching(false);
     }, [fetching])
 
